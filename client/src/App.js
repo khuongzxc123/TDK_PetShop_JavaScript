@@ -1,25 +1,70 @@
-import { Routes, Route } from "react-router-dom";
-import About from "./pages/About";
-import Register from "./pages/Auth/Register";
-import Contact from "./pages/Contact";
-import HomePage from "./pages/HomePage";
-import PageNotFound from "./pages/PageNotFound";
-import Policy from "./pages/Policy";
-import Login from "./pages/Auth/Login";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "./App.css";
+import CartPage from "./pages/CartPage";
+import Homepage from "./pages/Homepage";
+import ItemPage from "./pages/ItemPage";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import CustomerPage from "./pages/CustomerPage";
+import BillsPage from "./pages/BillsPage";
 function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="/about" element={<About />}></Route>
-        <Route path="/contact" element={<Contact />}></Route>
-        <Route path="/policy" element={<Policy />}></Route>
-        <Route path="/*" element={<PageNotFound />}></Route>
-        <Route path="/register" element={<Register />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-      </Routes>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Homepage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/items"
+            element={
+              <ProtectedRoute>
+                <ItemPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bills"
+            element={
+              <ProtectedRoute>
+                <BillsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/customers"
+            element={
+              <ProtectedRoute>
+                <CustomerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
 
 export default App;
+export function ProtectedRoute({ children }) {
+  if (localStorage.getItem("auth")) {
+    return children;
+  } else {
+    return <Navigate to="/login" />;
+  }
+}
